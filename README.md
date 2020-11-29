@@ -13,6 +13,12 @@ Quick Start
 * `python3 bot.py nameOfServer`
 * Ex: `python3 bot.py sabi-general`
 
+#### How do you attach pictures?
+* Add any pics you want in your next post to the `images` directory
+* Lain will post all pics in the directory, then move them to `posted` directory to be purged
+* First pic will receive the caption, all subsequent pics will just be posted without a caption
+* Ex: /image This is a picture of my dog
+
 Commands
 ----------
 While in the app, you can use these commands
