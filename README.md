@@ -9,11 +9,15 @@ Quick Start
 * Copy the webhook URL into webhooks.conf
 * Ex: sabi-general = https://discord.com/api/webhooks/1234/1234
 
-### Start the Lain Bot
+### Message from the command line for scripting ease
+* `python3 bot.py nameOfServer -msg This is the message to send to the textChannel.` 
+* `python3 bot.py sabi-general -msg Sabi is Simple, Lightweight, but Not Beautiful.`
+
+### Start the Lain Bot (Interactive Shell)
 * `python3 bot.py nameOfServer`
 * Ex: `python3 bot.py sabi-general`
 
-#### How do you attach pictures?
+#### How do you attach pictures (Interactive Shell)?
 * Add any pics you want in your next post to the `images` directory
 * Lain will post all pics in the directory, then move them to `posted` directory to be purged
 * First pic will receive the caption, all subsequent pics will just be posted without a caption
