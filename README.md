@@ -31,6 +31,8 @@ While in the app, you can use these commands
   * Ex: /change art-commentary
   * This would change to the art-commentary
   * webhook you have in webhooks.conf
+* /d -OR- /clear
+  * Clear the screen
 * /i -OR- /image
   * Attach an image to your post.
   * Ex: /image This is a pic of me and my dog!
