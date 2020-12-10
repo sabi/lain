@@ -11,7 +11,7 @@ Quick Start
 * In a channel you moderate, right click a text channel.
 * Edit Channel -> Integrations -> Create Webhook
 * Copy the webhook URL into webhooks.conf
-* Ex: sabi-general = https://discord.com/api/webhooks/1234/1234
+* Ex: `sabi-general = https://discord.com/api/webhooks/1234/1234`
 
 ### Message from the command line for scripting ease
 * `python3 bot.py nameOfServer -msg This is the message to send to the textChannel.` 
