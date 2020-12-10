@@ -1,6 +1,10 @@
 # Lain Bot
 Sabi. Simple, Lightweight, but Not Beautiful.
 
+Initial Setup
+-----------------------------------------
+* Run `python3 bot.py`. This will generate an images directory and a webhooks.conf
+
 Quick Start
 -----------------------------------------
 ### Create a Discord Webhook
