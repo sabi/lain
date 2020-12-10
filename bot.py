@@ -7,50 +7,22 @@ import sys, os, requests
 
 version = '1.0'
 
-webhooks = {}
+webhooks = {} # These are populated from webhooks.conf
 cwd = os.path.abspath(os.path.dirname(__file__)) + '/'
-
-def clear():
-    if os.name != 'nt':
-        os.system('clear')
-    else:
-        os.system('cls')
-    print('Input message and hit Enter to send. /help for more info.\n')
-
-def postMessage(msg, webhook, tts=False, image=False):
-    if image:
-        first = True
-        for img in os.listdir('images'):
-            if first == True:
-                requests.post(webhook, data={'content': msg}, files={'file': open('images/' + img, 'rb')})
-                first = False
-            else:
-                requests.post(webhook, data={'content': " "}, files={'file': open('images/' + img, 'rb')})
-            os.remove('images/' + img)
-    else:
-        requests.post(webhook, data={'content': msg, 'tts': tts})
-
-def readConfigOrDie():
-    if not os.path.isfile(cwd + 'webhooks.conf'):
-        sys.exit('Your webhooks.conf is missing')
-    with open('webhooks.conf','r') as ifile:
-        for i in ifile.readlines():
-            i = i.split('=')
-            while i[0][-1] == ' ':
-                i[0] = i[0][:-1]
-            while i[1][0] == ' ':
-                i[1] = i[1][1:]
-            webhooks[i[0]] = i[1].strip()
-    return webhooks
 
 def helpMenu():
     print("""
-    Command Line Messages:
+Command Line Messages:
 
+    Text Only:
     python3 bot.py textChannel -msg This is the message to send to the textChannel
     Ex: python3 bot.py sabi-general -msg Sabi is Simple, Lightweight, but Not Beautiful.
 
-    Interactive Shell:
+    Image Posts:
+    python3 bot.py textChannel -img This is optional text to post with the image
+    Ex: python3 bot.py sabi-general -img Sabi's logo is katakana made to look like sakura branches.
+
+Interactive Shell:
     python3 bot.py textChannel
     Ex: python3 bot.py sabi-general
 
@@ -71,6 +43,39 @@ def helpMenu():
     /v  /version - Print current version
     """)
 
+def clear():
+    if os.name != 'nt':
+        os.system('clear')
+    else:
+        os.system('cls')
+    print('Input message and hit Enter to send. /help for more info.\n')
+
+def postMessage(msg, webhook, tts=False, image=False):
+    if image:
+        first = True
+        for img in os.listdir('images'):
+            if first == True:
+                requests.post(webhook, data={'content': msg}, files={'file': open('images/' + img, 'rb')})
+                first = False
+            else:
+                requests.post(webhook, data={'content': " "}, files={'file': open('images/' + img, 'rb')})
+            #os.remove('images/' + img)
+    else:
+        requests.post(webhook, data={'content': msg, 'tts': tts})
+
+def readConfigOrDie():
+    with open('webhooks.conf','r') as ifile:
+        for i in ifile.readlines():
+            if i[0] == '#':
+                continue
+            i = i.split('=')
+            while i[0][-1] == ' ':
+                i[0] = i[0][:-1]
+            while i[1][0] == ' ':
+                i[1] = i[1][1:]
+            webhooks[i[0]] = i[1].strip()
+    return webhooks
+
 def serverCheck(server, webhook):
     if server in webhooks.keys():
         webhook = webhooks[server]
@@ -79,8 +84,16 @@ def serverCheck(server, webhook):
         print('Available servers:\n'+ str(servers))
     return webhook
 
-# Start Program #
+def setup():
+    if not os.path.isdir(cwd + 'images'):
+        os.mkdir('images')
+    if not os.path.isfile(cwd + 'webhooks.conf'):
+        with open('webhook.conf','w') as ifile:
+            ifile.write('# movie-chat = https://discord.com/api/webhooks/123/123')
+        sys.exit('Add webhooks to your webhooks.conf\nEx: movie-chat = https://discord.com/api/webhooks/123/123')
 
+# Start Program #
+setup()
 webhooks = readConfigOrDie()
 servers = list(webhooks.keys())
 if len(sys.argv) < 2:
@@ -95,43 +108,52 @@ if server in webhooks.keys():
     webhook = webhooks[server]
 else:
     sys.exit('Error: ' + server + ' not in webhooks')
-clear()
 
-if '-msg' in sys.argv:
+if '-img' in sys.argv:
+    msgArg = sys.argv[sys.argv.index('-img') + 1:]
+    msg = ""
+    for i in msgArg:
+        msg += i + ' '
+    postMessage(msg, webhook, image=True)
+    sys.exit()
+
+elif '-msg' in sys.argv:
     msgArg = sys.argv[sys.argv.index('-msg') + 1:]
     msg = ""
     for i in msgArg:
         msg += i + ' '
     postMessage(msg, webhook)
-else:
-    while True:
-        msg = input('lainbot@' + server + ': ')
-        if msg[0:6] == '/quit' or msg[0:2] == '/q':
-            sys.exit()
-        elif msg[0:7] == '/clear' or msg[0:2] =='/d':
-            clear()
-        elif msg[0:6] == '/help' or msg[0:2] == '/h':
-            helpMenu()
-        elif msg[0:8] == '/server' or msg[0:2] == '/s':
-            print('Current server: ' + server)
-        elif msg[0:9] == '/version' or msg[0:2] == '/v':
-            print('Current version: ' + version)
-        elif msg[0:4] == '/tts' or msg[0:2] == '/t':
+    sys.exit()
+
+clear()
+while True:
+    msg = input('lainbot@' + server + ': ')
+    if msg[0:6] == '/quit' or msg[0:2] == '/q':
+        sys.exit()
+    elif msg[0:7] == '/clear' or msg[0:2] =='/d':
+        clear()
+    elif msg[0:6] == '/help' or msg[0:2] == '/h':
+        helpMenu()
+    elif msg[0:8] == '/server' or msg[0:2] == '/s':
+        print('Current server: ' + server)
+    elif msg[0:9] == '/version' or msg[0:2] == '/v':
+        print('Current version: ' + version)
+    elif msg[0:4] == '/tts' or msg[0:2] == '/t':
+        msg = msg.split(' ',1)[1]
+        postMessage(msg, webhook, tts=True)
+    elif msg[0:7] == '/image' or msg[0:2] == '/i':
+        if " " in msg:
             msg = msg.split(' ',1)[1]
-            postMessage(msg, webhook, tts=True)
-        elif msg[0:7] == '/image' or msg[0:2] == '/i':
-            if " " in msg:
-                msg = msg.split(' ',1)[1]
-                postMessage(msg, webhook, image=True)
-            else:
-                postMessage(' ', webhook, image=True)
-        elif msg[0:7] == '/change' or msg[0:2] == '/c':
-            if " " in msg:
-                server = msg.split(' ',1)[1]
-                webhook = serverCheck(server, webhook)
-            else:
-                print('Available servers:\n'+ str(servers))
-                server = input('To which server would you like to change?\n')
-                webhook = serverCheck(server, webhook)
+            postMessage(msg, webhook, image=True)
         else:
-            postMessage(msg, webhook)
+            postMessage(' ', webhook, image=True)
+    elif msg[0:7] == '/change' or msg[0:2] == '/c':
+        if " " in msg:
+            server = msg.split(' ',1)[1]
+            webhook = serverCheck(server, webhook)
+        else:
+            print('Available servers:\n'+ str(servers))
+            server = input('To which server would you like to change?\n')
+            webhook = serverCheck(server, webhook)
+    else:
+        postMessage(msg, webhook)
