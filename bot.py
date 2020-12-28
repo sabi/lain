@@ -88,7 +88,7 @@ def setup():
     if not os.path.isdir(cwd + 'images'):
         os.mkdir('images')
     if not os.path.isfile(cwd + 'webhooks.conf'):
-        with open('webhook.conf','w') as ifile:
+        with open('webhooks.conf','w') as ifile:
             ifile.write('# movie-chat = https://discord.com/api/webhooks/123/123')
         sys.exit('Add webhooks to your webhooks.conf\nEx: movie-chat = https://discord.com/api/webhooks/123/123')
 
