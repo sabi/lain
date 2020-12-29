@@ -64,7 +64,7 @@ def postMessage(msg, webhook, tts=False, image=False):
         requests.post(webhook, data={'content': msg, 'tts': tts})
 
 def readConfigOrDie():
-    with open('webhooks.conf','r') as ifile:
+    with open(cwd + 'webhooks.conf','r') as ifile:
         for i in ifile.readlines():
             if i[0] == '#':
                 continue
