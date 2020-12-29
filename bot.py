@@ -5,7 +5,7 @@
 
 import sys, os, requests
 
-version = '1.0'
+version = '1.1'
 
 webhooks = {} # These are populated from webhooks.conf
 cwd = os.path.abspath(os.path.dirname(__file__)) + '/'
