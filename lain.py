@@ -5,7 +5,7 @@
 
 import sys, os, requests
 
-version = '1.1'
+version = '1.2'
 
 webhooks = {} # These are populated from webhooks.conf
 cwd = os.path.abspath(os.path.dirname(__file__)) + '/'
@@ -15,16 +15,16 @@ def helpMenu():
 Command Line Messages:
 
     Text Only:
-    python3 bot.py textChannel -msg This is the message to send to the textChannel
-    Ex: python3 bot.py sabi-general -msg Sabi is Simple, Lightweight, but Not Beautiful.
+    python3 lain.py textChannel -msg This is the message to send to the textChannel
+    Ex: python3 lain.py sabi-general -msg Sabi is Simple, Lightweight, but Not Beautiful.
 
     Image Posts:
-    python3 bot.py textChannel -img This is optional text to post with the image
-    Ex: python3 bot.py sabi-general -img Sabi's logo is katakana made to look like sakura branches.
+    python3 lain.py textChannel -img This is optional text to post with the image
+    Ex: python3 lain.py sabi-general -img Sabi's logo is katakana made to look like sakura branches.
 
 Interactive Shell:
-    python3 bot.py textChannel
-    Ex: python3 bot.py sabi-general
+    python3 lain.py textChannel
+    Ex: python3 lain.py sabi-general
 
     /c  /change  - Change to another server.
                  Ex: /change art-commentary
@@ -86,9 +86,9 @@ def serverCheck(server, webhook):
 
 def setup():
     if not os.path.isdir(cwd + 'images'):
-        os.mkdir('images')
+        os.mkdir(cwd + 'images')
     if not os.path.isfile(cwd + 'webhooks.conf'):
-        with open('webhooks.conf','w') as ifile:
+        with open(cwd + 'webhooks.conf','w') as ifile:
             ifile.write('# movie-chat = https://discord.com/api/webhooks/123/123')
         sys.exit('Add webhooks to your webhooks.conf\nEx: movie-chat = https://discord.com/api/webhooks/123/123')
 
