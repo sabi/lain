@@ -1,9 +1,9 @@
-# Lain Bot
+# Lain
 Sabi. Simple, Lightweight, but Not Beautiful.
 
 Initial Setup
 -----------------------------------------
-* Run `python3 bot.py`. This will generate an images directory and a webhooks.conf
+* Run `python3 lain.py`. This will generate an images directory and a webhooks.conf
 
 Quick Start
 -----------------------------------------
@@ -14,12 +14,12 @@ Quick Start
 * Ex: `sabi-general = https://discord.com/api/webhooks/1234/1234`
 
 ### Message from the command line for scripting ease
-* `python3 bot.py nameOfServer -msg This is the message to send to the textChannel.` 
-* `python3 bot.py sabi-general -msg Sabi is Simple, Lightweight, but Not Beautiful.`
+* `python3 lain.py nameOfServer -msg This is the message to send to the textChannel.` 
+* `python3 lain.py sabi-general -msg Sabi is Simple, Lightweight, but Not Beautiful.`
 
 ### Start the Lain Bot (Interactive Shell)
-* `python3 bot.py nameOfServer`
-* Ex: `python3 bot.py sabi-general`
+* `python3 lain.py nameOfServer`
+* Ex: `python3 lain.py sabi-general`
 
 #### How do you attach pictures (Interactive Shell)?
 * Add any pics you want in your next post to the `images` directory
