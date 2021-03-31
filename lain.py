@@ -5,7 +5,7 @@
 
 import sys, os, requests
 
-version = '1.2'
+version = '1.3'
 
 webhooks = {} # These are populated from webhooks.conf
 cwd = '/opt/sabi/lain/'
