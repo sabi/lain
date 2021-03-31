@@ -8,7 +8,9 @@ import sys, os, requests
 version = '1.2'
 
 webhooks = {} # These are populated from webhooks.conf
-cwd = os.path.abspath(os.path.dirname(__file__)) + '/'
+cwd = '/opt/sabi/lain/'
+# uncomment to return to using a path relative of the install location for lain
+#cwd = os.path.abspath(os.path.dirname(__file__)) + '/'
 
 def helpMenu():
     print("""
