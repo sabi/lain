@@ -3,14 +3,15 @@
 # Lain Bot for Discord
 # Sabi. Simple, Lightweight, but Not Beautiful.
 
-import sys, os, requests
+import sys, os, requests, shutil
 
-version = '1.3'
+version = '1.5'
 
 webhooks = {} # These are populated from webhooks.conf
-cwd = '/opt/sabi/lain/'
-# uncomment to return to using a path relative of the install location for lain
-#cwd = os.path.abspath(os.path.dirname(__file__)) + '/'
+if sys.platform == 'linux':
+    cwd = '/opt/sabi/lain/'
+else:
+    cwd = os.path.abspath(os.path.dirname(__file__)) + '/'
 
 def helpMenu():
     print("""
@@ -87,6 +88,12 @@ def serverCheck(server, webhook):
     return webhook
 
 def setup():
+    if sys.platform == 'linux':
+        shutil.move('lain.py', cwd + 'lain.py')
+        if not os.path.isfile('/usr/local/bin/lain'):
+            os.system('ln -s /opt/sabi/lain/lain.py /usr/local/bin/lain')
+        os.system('chmod 755 /usr/local/bin/lain')
+        os.system('chmod 755 /opt/sabi/lain/lain.py')
     if not os.path.isdir(cwd + 'images'):
         os.mkdir(cwd + 'images')
     if not os.path.isfile(cwd + 'webhooks.conf'):
