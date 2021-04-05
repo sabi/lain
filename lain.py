@@ -5,7 +5,7 @@
 
 import sys, os, requests, shutil
 
-version = '1.5'
+version = '1.6'
 
 webhooks = {} # These are populated from webhooks.conf
 if sys.platform == 'linux':
