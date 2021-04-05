@@ -89,6 +89,8 @@ def serverCheck(server, webhook):
 
 def setup():
     if sys.platform == 'linux':
+        if not os.path.isdir(cwd):
+            os.system('mkdir -p ' + cwd)
         shutil.move('lain.py', cwd + 'lain.py')
         if not os.path.isfile('/usr/local/bin/lain'):
             os.system('ln -s /opt/sabi/lain/lain.py /usr/local/bin/lain')
