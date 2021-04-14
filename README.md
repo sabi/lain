@@ -3,6 +3,7 @@ Sabi. Simple, Lightweight, but Not Beautiful.
 
 Installation
 -----------------------------------------
+* Download lain.py and [sabi.py](https://github.com/sabi/sabi/blob/main/sabi.py) to the same directory
 * Run `sudo python3 lain.py install` to be installed at /opt/sabi/lain/ (Recommended)
 * -OR- Run `python3 lain.py install --local-install` to be installed in local path
 
