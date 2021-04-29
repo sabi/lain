@@ -18,7 +18,7 @@
 import sabi, sys, os, requests, shutil
 
 software_name = 'lain'
-version = '2.1'
+version = '2.11'
 server = ''
 prompt = 'lain@' + server + ': '
 cwd = sabi.cwd(software_name)
@@ -114,18 +114,19 @@ def main():
     if server not in webhooks.keys():
         sys.exit(server + 'not found in webhooks.conf')
 
+    webhook = webhooks[server].strip()
 
     msg = ''
     if '-img' in sys.argv:
-        for word in sys.argv[1:]:
-            msg += word
-        postMessage(msg, webhook, image=True)
+        for word in sys.argv[3:]:
+            msg += word + ' '
+        post_message(msg, webhook, image=True)
         sys.exit(0) #TODO Check?
 
     elif '-msg' in sys.argv:
-        for word in sys.argv[1:]:
-            msg += word
-        postMessage(msg, webhook)
+        for word in sys.argv[3:]:
+            msg += word + ' '
+        post_message(msg, webhook)
         sys.exit(0) #TODO Check?
 
     sabi.clear()
@@ -149,9 +150,9 @@ def main():
         elif command in ['/version','/v']:
             print(version)
         elif command in ['/tts','/t']:
-            postMessage(msg, webhook, tts=True)
+            post_message(msg, webhook, tts=True)
         elif command in ['/image','/i']:
-            postMessage(msg, webhook, image=True)
+            post_message(msg, webhook, image=True)
         elif command in ['/change','/c']:
             if sabi.key_check(msg, webhooks):
                 webhook = webhooks[msg]
@@ -161,7 +162,7 @@ def main():
                 if sabi.key_check(server, webhooks):
                     webhook = webhooks[server]
         else:
-            postMessage(msg, webhook)
+            post_message(msg, webhook)
 
 if __name__ == "__main__":
     main()
