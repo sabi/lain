@@ -18,17 +18,17 @@
 import sabi, sys, os, requests, shutil
 
 software_name = 'lain'
-version = '2.11'
+version = '2.2'
 server = ''
 prompt = 'lain@' + server + ': '
-cwd = sabi.cwd(software_name)
 
-def setup(cwd, local_install=False):
-    if not local_install:
-        sabi.sabifs(software_name)
-        for pyfile in os.listdir(os.path.abspath(os.path.dirname(__file__))):
-            shutil.move(pyfile, cwd + pyfile)
-        sabi.symlink(software_name)
+def setup():
+    sabi.sudoexit()
+    cwd = sabi.cwd(software_name)
+    sabi.sabifs(software_name)
+    shutil.move('sabi.py',cwd + 'sabi.py')
+    shutil.move('lain.py',cwd + 'lain.py')
+    sabi.symlink(software_name)
     for directory in ['docs','images']:
         if not sabi.dircheck(cwd + directory):
             os.mkdir(cwd + directory)
@@ -39,6 +39,7 @@ def setup(cwd, local_install=False):
             wfile.write('# For more info on getting Discord weblinks or generating this config')
             wfile.write('# see sabisimple.com/lain_installation.html')
         sys.exit('Add webhooks to your webhooks.conf\nEx: movie-chat = https://discord.com/api/123/123')
+    sys.exit('Lain is installed. See "lain -h" for more info')
 
 def post_message(msg, webhook, tts=False, image=False, del_image=False):
     if image:
@@ -98,17 +99,13 @@ def main():
         help_menu()
     elif sys.argv[1] in ['-v','--version']:
         sys.exit(version)
-    if 'install' in sys.argv:
-        local_install = False
-        if '-l' in sys.argv or '--local-install' in sys.argv:
-            local_install = True
-        if not local_install:
-            sabi.sudoexit('Please run with with sudo or --local-install flag')
-        cwd = sabi.cwd(software_name, local_install)
-        setup(cwd, local_install)
-    cwd = sabi.cwd(software_name)
-    webhooks = sabi.config_read(cwd + 'webhooks.conf')
 
+    cwd = sabi.cwd(software_name)
+
+    if 'install' in sys.argv:
+        setup() # exits
+
+    webhooks = sabi.config_read(cwd + 'webhooks.conf')
 
     server = sys.argv[1]
     if server not in webhooks.keys():
