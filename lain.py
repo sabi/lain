@@ -18,7 +18,7 @@
 import sabi, sys, os, requests, shutil
 
 software_name = 'lain'
-version = '2.2'
+version = '2.21'
 server = ''
 prompt = 'lain@' + server + ': '
 
@@ -34,10 +34,10 @@ def setup():
             os.mkdir(cwd + directory)
     if not os.path.isfile(cwd + 'webhooks.conf'):
         with open(cwd + 'webhooks.conf', 'w') as wfile:
-            wfile.write('# channel-name = discord-webhook')
-            wfile.write('# movie-chat = https://discord.com/apt/webhooks/123/123')
-            wfile.write('# For more info on getting Discord weblinks or generating this config')
-            wfile.write('# see sabisimple.com/lain_installation.html')
+            wfile.write('# channel-name = discord-webhook\n')
+            wfile.write('# movie-chat = https://discord.com/apt/webhooks/123/123\n')
+            wfile.write('# For more info on getting Discord weblinks or generating this config\n')
+            wfile.write('# see sabisimple.com/lain_installation.html\n')
         sys.exit('Add webhooks to your webhooks.conf\nEx: movie-chat = https://discord.com/api/123/123')
     sys.exit('Lain is installed. See "lain -h" for more info')
 
