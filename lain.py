@@ -18,7 +18,7 @@
 import sabi, sys, os, requests, shutil
 
 software_name = 'lain'
-version = '2.22'
+version = '2.220'
 server = ''
 prompt = 'lain@' + server + ': '
 
@@ -39,8 +39,8 @@ def setup():
             wfile.write('# For more info on getting Discord weblinks or generating this config\n')
             wfile.write('# see sabisimple.com/lain_installation.html\n')
         print('Add webhooks to your webhooks.conf\nEx: movie-chat = https://discord.com/api/123/123')
-        return 0
-    sys.exit('Lain is installed. See "lain -h" for more info')
+        #return 0
+    #sys.exit('Lain is installed. See "lain -h" for more info')
 
 def post_message(msg, webhook, tts=False, image=False, del_image=False):
     if image:
@@ -105,6 +105,7 @@ def main():
 
     if 'install' in sys.argv:
         setup() # exits
+        return 0
 
     webhooks = sabi.config_read(cwd + 'webhooks.conf')
 
