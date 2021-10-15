@@ -18,7 +18,7 @@
 import sabi, sys, os, requests, shutil
 
 software_name = 'lain'
-version = '2.220'
+version = '2.221'
 server = ''
 prompt = 'lain@' + server + ': '
 
@@ -111,7 +111,7 @@ def main():
 
     server = sys.argv[1]
     if server not in webhooks.keys():
-        sys.exit(server + 'not found in webhooks.conf')
+        sys.exit(server + ' is not found in webhooks.conf')
 
     webhook = webhooks[server].strip()
 
