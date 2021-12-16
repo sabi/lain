@@ -68,7 +68,7 @@ def main():
         help_menu()
     elif sys.argv[1] in ['-v','--version']:
         sys.exit(version)
-    if len(sys.argv) < 3:
+    elif len(sys.argv) < 3:
         help_menu()
 
     webhook = sys.argv[1]
