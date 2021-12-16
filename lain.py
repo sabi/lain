@@ -15,153 +15,80 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-import sabi, sys, os, requests, shutil
+import requests
+import os
+import sys
 
-software_name = 'lain'
-version = '2.221'
-server = ''
-prompt = 'lain@' + server + ': '
+version = '3.0'
 
-def setup():
-    sabi.sudoexit()
-    cwd = sabi.cwd(software_name)
-    sabi.sabifs(software_name)
-    shutil.move('sabi.py',cwd + 'sabi.py')
-    shutil.move('lain.py',cwd + 'lain.py')
-    sabi.symlink(software_name)
-    for directory in ['docs','images']:
-        if not sabi.dircheck(cwd + directory):
-            os.mkdir(cwd + directory)
-    if not os.path.isfile(cwd + 'webhooks.conf'):
-        with open(cwd + 'webhooks.conf', 'w') as wfile:
+def read_config():
+    home = os.path.expanduser('~')
+    config_dict = {}
+    os.makedirs(home + '/.config/sabi/lain/', exist_ok=True)
+    if not os.path.isfile(home + '/.config/sabi/lain/webhooks.conf'):
+        with open( home + '/.config/sabi/lain/webhooks.conf', 'w') as wfile:
             wfile.write('# channel-name = discord-webhook\n')
             wfile.write('# movie-chat = https://discord.com/apt/webhooks/123/123\n')
-            wfile.write('# For more info on getting Discord weblinks or generating this config\n')
-            wfile.write('# see sabisimple.com/lain_installation.html\n')
-        print('Add webhooks to your webhooks.conf\nEx: movie-chat = https://discord.com/api/123/123')
-        #return 0
-    #sys.exit('Lain is installed. See "lain -h" for more info')
+            sys.exit('Please add a webhook to ~/.config/sabi/lain/webhooks.conf')
+    with open(home + '/.config/sabi/lain/webhooks.conf', 'r') as cfile:
+        for line in cfile.readlines():
+            if line[0] == '#': # remove comments
+                continue
+            line = line.split('=')
+            while line[0][-1] == ' ': # remove whitespace
+                line[0] = line[0][:-1]
+            while line[1][0] == ' ':
+                line[1] = line[1][1:]
+            config_dict[line[0]] = line[1]
+    return config_dict # dictionary
 
-def post_message(msg, webhook, tts=False, image=False, del_image=False):
+def post_message(webhook, msg, tts=False, image=False, image_path=''):
+    print(webhook, msg)
     if image:
-        first = True
-        for img in os.listdir(cwd + 'images'):
-            if first == True:
-                requests.post(webhook, data={'content':msg}, files={'file': open('images/' + img, 'rb')})
-                first = False
-            else:
-                requests.post(webhook, data={'content': " "}, files={'file': open('images/' + img, 'rb')})
-            if del_image:
-                os.remove(cwd + 'images/' + img)
+        requests.post(webhook, data={'content':msg}, files={'file': open(image_path, 'rb')})
     else:
         requests.post(webhook, data={'content': msg, 'tts': tts})
+    sys.exit()
 
 def help_menu():
     sys.exit('''
 Lain - CLI to Discord
 Sabi. Simple, Lightweight, but Not Beautiful
-
-To install: sudo python3 lain.py install
-
 Command Line Messages:
-
     Text Only:
-    lain textChannel -msg This is the message to send to the textChannel
-    Ex: lain sabi-general -msg Sabi is Simple, Lightweight, but Not Beautiful.
-
+        lain textChannel -msg This is the message to send to the textChannel
+        Ex: lain sabi-general -msg Sabi is Simple, Lightweight, but Not Beautiful.
+    
     Image Posts:
-    lain textChannel -img This is optional text to post with the image
-    Ex: lain sabi-general -img Sabi's logo is katakana made to look like sakura branches.
-
-Interactive Shell:
-
-    lain textChannel
-    Ex: lain sabi-general
-
-    /c  /change  - Change to another server.
-        Ex: /change art-commentary
-        This would change to the art-commentary
-        webhook you have in webhooks.conf
-    /d  /clear   - Clear screen
-    /i  /image   - Attach an image to your post.
-                   Ex: /image This is a pic of me and my dog!
-                   You can also post a pic with no caption by
-                   not including additional text in the post
-    /q  /quit    - Exit the Lain Bot controls
-    /s  /server  - Print the name of the current webhook
-                   you are using.
-    /t  /tts     - Enable text-to-speech on your post
-                   Ex: /tts This message is being read out loud!
-    /v  /version - Print current version\n''')
+        lain textChannel -img This is optional text to post with the image
+        Ex: lain sabi-general -img Sabi's logo is katakana made to look like sakura branches.''')
 
 def main():
-    sabi.arg_check(software_name)
+    if len(sys.argv) < 3:
+        help_menu()
     if sys.argv[1] in ['-h','--help']:
         help_menu()
     elif sys.argv[1] in ['-v','--version']:
         sys.exit(version)
 
-    cwd = sabi.cwd(software_name)
-
-    if 'install' in sys.argv:
-        setup() # exits
-        return 0
-
-    webhooks = sabi.config_read(cwd + 'webhooks.conf')
-
-    server = sys.argv[1]
-    if server not in webhooks.keys():
-        sys.exit(server + ' is not found in webhooks.conf')
-
-    webhook = webhooks[server].strip()
-
-    msg = ''
-    if '-img' in sys.argv:
+    webhook = sys.argv[1]
+    webhooks = read_config()
+    
+    if webhook not in webhooks:
+        sys.exit('Webhook not found in ~/.config/sabi/lain/webhooks.conf')
+    webhook = webhooks[webhook].strip()
+    if sys.argv[2] in ['-i','-img','--img']:
+        post_message(webhook, msg=' ', image=True, image_path=sys.argv[3])
+    elif sys.argv[2] in ['-m','-msg','--msg']:
+        msg = ''
         for word in sys.argv[3:]:
             msg += word + ' '
-        post_message(msg, webhook, image=True)
-        sys.exit(0) #TODO Check?
-
-    elif '-msg' in sys.argv:
+        post_message(webhook, msg)
+    elif sys.argv[2] in ['-t','-tts','--tts']:
+        msg = ''
         for word in sys.argv[3:]:
             msg += word + ' '
-        post_message(msg, webhook)
-        sys.exit(0) #TODO Check?
-
-    sabi.clear()
-
-    # Interactive Shell
-    while True:
-        command = ''
-        msg = input(prompt)
-        if msg[0] in ['/q','/h','/v','/t','/i']:
-            if ' ' in msg:
-                msg.split(' ', 1)
-                command = msg[0]
-                msg = msg[1:]
-            else:
-                command = msg
-                msg = ''
-        if command in ['/quit','/q']:
-            sys.exit(0) # TODO
-        elif command in ['/help','h']:
-            help_menu()
-        elif command in ['/version','/v']:
-            print(version)
-        elif command in ['/tts','/t']:
-            post_message(msg, webhook, tts=True)
-        elif command in ['/image','/i']:
-            post_message(msg, webhook, image=True)
-        elif command in ['/change','/c']:
-            if sabi.key_check(msg, webhooks):
-                webhook = webhooks[msg]
-            else:
-                print('Available servers:\n'+str(list(webhooks.keys())))
-                server = input('To which server would you like to change?\n')
-                if sabi.key_check(server, webhooks):
-                    webhook = webhooks[server]
-        else:
-            post_message(msg, webhook)
-
-if __name__ == "__main__":
+        post_message(webhook, msg, tts=True)
+    
+if __name__ == '__main__':
     main()
