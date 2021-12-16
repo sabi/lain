@@ -19,7 +19,7 @@ import requests
 import os
 import sys
 
-version = '3.0'
+version = '3.01'
 
 def read_config():
     home = os.path.expanduser('~')
@@ -64,12 +64,12 @@ Command Line Messages:
         Ex: lain sabi-general -img Sabi's logo is katakana made to look like sakura branches.''')
 
 def main():
-    if len(sys.argv) < 3:
-        help_menu()
     if sys.argv[1] in ['-h','--help']:
         help_menu()
     elif sys.argv[1] in ['-v','--version']:
         sys.exit(version)
+    if len(sys.argv) < 3:
+        help_menu()
 
     webhook = sys.argv[1]
     webhooks = read_config()
