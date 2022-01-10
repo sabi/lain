@@ -24,12 +24,6 @@ version = '3.02'
 def read_config():
     home = os.path.expanduser('~')
     config_dict = {}
-    os.makedirs(home + '/.config/sabi/lain/', exist_ok=True)
-    if not os.path.isfile(home + '/.config/sabi/lain/webhooks.conf'):
-        with open( home + '/.config/sabi/lain/webhooks.conf', 'w') as wfile:
-            wfile.write('# channel-name = discord-webhook\n')
-            wfile.write('# movie-chat = https://discord.com/apt/webhooks/123/123\n')
-            sys.exit('Please add a webhook to ~/.config/sabi/lain/webhooks.conf')
     with open(home + '/.config/sabi/lain/webhooks.conf', 'r') as cfile:
         for line in cfile.readlines():
             if line[0] == '#': # remove comments
@@ -64,6 +58,12 @@ Command Line Messages:
         Ex: lain sabi-general -img Sabi's logo is katakana made to look like sakura branches.''')
 
 def main():
+    os.makedirs(home + '/.config/sabi/lain/', exist_ok=True)
+    if not os.path.isfile(home + '/.config/sabi/lain/webhooks.conf'):
+        with open( home + '/.config/sabi/lain/webhooks.conf', 'w') as wfile:
+            wfile.write('# channel-name = discord-webhook\n')
+            wfile.write('# movie-chat = https://discord.com/apt/webhooks/123/123\n')
+            sys.exit('Please add a webhook to ~/.config/sabi/lain/webhooks.conf')
     if len(sys.argv) == 1:
         help_menu()
     if sys.argv[1] in ['-h','--help']:
