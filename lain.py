@@ -58,6 +58,7 @@ Command Line Messages:
         Ex: lain sabi-general -img Sabi's logo is katakana made to look like sakura branches.''')
 
 def main():
+    home = os.path.expanduser('~')
     os.makedirs(home + '/.config/sabi/lain/', exist_ok=True)
     if not os.path.isfile(home + '/.config/sabi/lain/webhooks.conf'):
         with open( home + '/.config/sabi/lain/webhooks.conf', 'w') as wfile:
