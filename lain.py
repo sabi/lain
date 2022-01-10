@@ -19,7 +19,7 @@ import requests
 import os
 import sys
 
-version = '3.02'
+version = '3.03'
 
 def read_config():
     home = os.path.expanduser('~')
