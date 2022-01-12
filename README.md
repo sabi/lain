@@ -14,7 +14,7 @@ Sabi. Simple, Lightweight, but Not Beautiful.
   - `lain <channel> -msg <Replace with message>`
   - `lain friends -msg Let's love Lain!`
 - Send an image
-  - `lain <channel> -img </path/to/image>
+  - `lain <channel> -img </path/to/image>`
   - `lain friends -img /home/lain/Pictures/selfie.jpg`
 
 ## How to create a Discord webhook
