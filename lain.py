@@ -37,7 +37,6 @@ def read_config():
     return config_dict # dictionary
 
 def post_message(webhook, msg, tts=False, image=False, image_path=''):
-    print(webhook, msg)
     if image:
         requests.post(webhook, data={'content':msg}, files={'file': open(image_path, 'rb')})
     else:
