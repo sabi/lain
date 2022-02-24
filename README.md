@@ -5,6 +5,8 @@ Sabi. Simple, Lightweight, but Not Beautiful.
 - Lain is a Linux command line utility that allows you to script messages to Discord. 
 
 ## Setup
+- Effortless install: `sudo apt update && sudo apt install -y python3 python3-pip wget && pip3 install requests && wget https://raw.githubusercontent.com/sabi/lain/main/lain.py && python3 lain.py`
+
 - `python3 lain.py`
 - Add webhooks to `~/.config/sabi/lain/webhooks.conf` in the format:
   - `channel-name = https://discord.com/api/123/123`
